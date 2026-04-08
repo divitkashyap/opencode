@@ -62,16 +62,16 @@ test("inactive terminal tab buffers persist across tab switches", async ({ page,
     .poll(
       async () => {
         const state = await store(page, key)
-        const first = state?.all.find((item) => item.titleNumber === 1)?.buffer ?? ""
-        const second = state?.all.find((item) => item.titleNumber === 2)?.buffer ?? ""
+        const firstBuffer = state?.all.find((item) => item.titleNumber === 1)?.buffer ?? ""
+        const secondBuffer = state?.all.find((item) => item.titleNumber === 2)?.buffer ?? ""
         return {
-          first: first.includes(one),
-          second: second.includes(two),
+          first: firstBuffer.includes(one) && !firstBuffer.includes(two),
+          second: secondBuffer.includes(two) && !secondBuffer.includes(one),
         }
       },
-      { timeout: 5_000 },
+      { timeout: 10_000 },
     )
-    .toEqual({ first: false, second: true })
+    .toEqual({ first: true, second: true })
 
   await second.click()
   await expect(second).toHaveAttribute("aria-selected", "true")
@@ -79,16 +79,16 @@ test("inactive terminal tab buffers persist across tab switches", async ({ page,
     .poll(
       async () => {
         const state = await store(page, key)
-        const first = state?.all.find((item) => item.titleNumber === 1)?.buffer ?? ""
-        const second = state?.all.find((item) => item.titleNumber === 2)?.buffer ?? ""
+        const firstBuffer = state?.all.find((item) => item.titleNumber === 1)?.buffer ?? ""
+        const secondBuffer = state?.all.find((item) => item.titleNumber === 2)?.buffer ?? ""
         return {
-          first: first.includes(one),
-          second: second.includes(two),
+          first: firstBuffer.includes(one) && !firstBuffer.includes(two),
+          second: secondBuffer.includes(two) && !secondBuffer.includes(one),
         }
       },
-      { timeout: 5_000 },
+      { timeout: 10_000 },
     )
-    .toEqual({ first: true, second: false })
+    .toEqual({ first: true, second: true })
 })
 
 test("closing the active terminal tab falls back to the previous tab", async ({ page, project }) => {
