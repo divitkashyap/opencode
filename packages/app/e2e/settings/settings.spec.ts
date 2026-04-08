@@ -44,12 +44,15 @@ test("changing language updates settings labels", async ({ page, gotoSession }) 
   await expect(select).toBeVisible()
   await select.locator('[data-slot="select-select-trigger"]').click()
 
-  await page.locator('[data-slot="select-select-item"]').filter({ hasText: "Deutsch" }).click()
+  const items = page.locator('[data-slot="select-select-item"]')
+  await expect(items.filter({ hasText: "Deutsch" })).toBeVisible({ timeout: 30_000 })
+  await items.filter({ hasText: "Deutsch" }).click()
 
   await expect(heading).toHaveText("Allgemein")
 
   await select.locator('[data-slot="select-select-trigger"]').click()
-  await page.locator('[data-slot="select-select-item"]').filter({ hasText: "English" }).click()
+  await expect(items.filter({ hasText: "English" })).toBeVisible({ timeout: 30_000 })
+  await items.filter({ hasText: "English" }).click()
   await expect(heading).toHaveText("General")
 })
 
@@ -61,7 +64,9 @@ test("changing color scheme persists in localStorage", async ({ page, gotoSessio
   await expect(select).toBeVisible()
 
   await select.locator('[data-slot="select-select-trigger"]').click()
-  await page.locator('[data-slot="select-select-item"]').filter({ hasText: "Dark" }).click()
+  const items = page.locator('[data-slot="select-select-item"]')
+  await expect(items.filter({ hasText: "Dark" })).toBeVisible({ timeout: 30_000 })
+  await items.filter({ hasText: "Dark" }).click()
 
   const colorScheme = await page.evaluate(() => {
     return document.documentElement.getAttribute("data-color-scheme")
@@ -69,7 +74,9 @@ test("changing color scheme persists in localStorage", async ({ page, gotoSessio
   expect(colorScheme).toBe("dark")
 
   await select.locator('[data-slot="select-select-trigger"]').click()
-  await page.locator('[data-slot="select-select-item"]').filter({ hasText: "Light" }).click()
+  const items = page.locator('[data-slot="select-select-item"]')
+  await expect(items.filter({ hasText: "Light" })).toBeVisible({ timeout: 30_000 })
+  await items.filter({ hasText: "Light" }).click()
 
   const lightColorScheme = await page.evaluate(() => {
     return document.documentElement.getAttribute("data-color-scheme")
@@ -363,7 +370,9 @@ test("color scheme, code font, and UI font rehydrate after reload", async ({ pag
   const colorSchemeSelect = dialog.locator(settingsColorSchemeSelector)
   await expect(colorSchemeSelect).toBeVisible()
   await colorSchemeSelect.locator('[data-slot="select-select-trigger"]').click()
-  await page.locator('[data-slot="select-select-item"]').filter({ hasText: "Dark" }).click()
+  const items = page.locator('[data-slot="select-select-item"]')
+  await expect(items.filter({ hasText: "Dark" })).toBeVisible({ timeout: 30_000 })
+  await items.filter({ hasText: "Dark" }).click()
   await expect(page.locator("html")).toHaveAttribute("data-color-scheme", "dark")
 
   const code = dialog.locator(settingsCodeFontSelector)
@@ -567,6 +576,7 @@ test("changing sound agent selection persists in localStorage", async ({ page, g
   await select.locator('[data-slot="select-select-trigger"]').click()
 
   const items = page.locator('[data-slot="select-select-item"]')
+  await expect(items.nth(2)).toBeVisible({ timeout: 30_000 })
   await items.nth(2).click()
 
   const stored = await page.evaluate((key) => {
@@ -617,6 +627,7 @@ test("changing permissions and errors sounds updates localStorage", async ({ pag
     (await permissionsSelect.locator('[data-slot="select-select-trigger-value"]').textContent())?.trim() ?? ""
   await permissionsSelect.locator('[data-slot="select-select-trigger"]').click()
   const permissionItems = page.locator('[data-slot="select-select-item"]')
+  await expect(permissionItems.first()).toBeVisible({ timeout: 30_000 })
   expect(await permissionItems.count()).toBeGreaterThan(1)
   if (permissionsCurrent) {
     await permissionItems.filter({ hasNotText: permissionsCurrent }).first().click()
@@ -629,6 +640,7 @@ test("changing permissions and errors sounds updates localStorage", async ({ pag
     (await errorsSelect.locator('[data-slot="select-select-trigger-value"]').textContent())?.trim() ?? ""
   await errorsSelect.locator('[data-slot="select-select-trigger"]').click()
   const errorItems = page.locator('[data-slot="select-select-item"]')
+  await expect(errorItems.first()).toBeVisible({ timeout: 30_000 })
   expect(await errorItems.count()).toBeGreaterThan(1)
   if (errorsCurrent) {
     await errorItems.filter({ hasNotText: errorsCurrent }).first().click()

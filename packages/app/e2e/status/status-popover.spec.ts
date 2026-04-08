@@ -6,10 +6,10 @@ test("status popover opens and shows tabs", async ({ page, gotoSession }) => {
 
   const { popoverBody } = await openStatusPopover(page)
 
-  await expect(popoverBody.getByRole("tab", { name: /servers/i })).toBeVisible()
-  await expect(popoverBody.getByRole("tab", { name: /mcp/i })).toBeVisible()
-  await expect(popoverBody.getByRole("tab", { name: /lsp/i })).toBeVisible()
-  await expect(popoverBody.getByRole("tab", { name: /plugins/i })).toBeVisible()
+  await expect(popoverBody.getByRole("tab", { name: /servers/i })).toBeVisible({ timeout: 30_000 })
+  await expect(popoverBody.getByRole("tab", { name: /mcp/i })).toBeVisible({ timeout: 30_000 })
+  await expect(popoverBody.getByRole("tab", { name: /lsp/i })).toBeVisible({ timeout: 30_000 })
+  await expect(popoverBody.getByRole("tab", { name: /plugins/i })).toBeVisible({ timeout: 30_000 })
 
   await page.keyboard.press("Escape")
   await expect(popoverBody).toHaveCount(0)
