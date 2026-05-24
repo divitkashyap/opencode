@@ -35,7 +35,6 @@ export function DialogForkFromTimeline(props: { sessionID: string; onMove: (mess
     } satisfies DialogSelectOption<string | undefined>
     const result = [] as DialogSelectOption<string | undefined>[]
     for (const message of messages) {
-      if (message.role !== "user") continue
       const part = (sync.data.part[message.id] ?? []).find(
         (x) => x.type === "text" && !x.synthetic && !x.ignored,
       ) as TextPart
